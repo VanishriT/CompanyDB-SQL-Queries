@@ -1,129 +1,151 @@
-# Company Database SQL Project
+# 📊 Company Database Management System (TechImpact)
 
-## 📌 Project Overview
-This project is a Company Database Management System created using SQL using the `TechImpact` database. It demonstrates database creation, table relationships, constraints, data insertion, updates, filtering, joins, aggregate functions, wildcard searches, unions, and subqueries.
+## 📌 Overview
 
-## 🛠️ Tools Used
-- MySQL
-- MySQL Workbench
+This project contains SQL queries to design and manage a **Company
+Database System** called **TechImpact**.\
+It models employees, branches, clients, and suppliers with real-world
+relationships.
 
-## 📂 Database Name
-```sql
+------------------------------------------------------------------------
+
+## 🏗️ Database Structure
+
+### 1. Employee
+
+-   emp_id (PK)
+-   first_name
+-   last_name
+-   birth_day
+-   sex
+-   salary
+-   super_id (FK → employee.emp_id)
+-   branch_id (FK → branch.branch_id)
+
+### 2. Branch
+
+-   branch_id (PK)
+-   branch_name
+-   mgr_id (FK → employee.emp_id)
+-   mgr_start_date
+
+### 3. Client
+
+-   client_id (PK)
+-   client_name
+-   branch_id (FK → branch.branch_id)
+
+### 4. Works_With
+
+-   emp_id (FK)
+-   client_id (FK)
+-   total_sales\
+    **PK:** (emp_id, client_id)
+
+### 5. Branch_Supplier
+
+-   branch_id (FK)
+-   supplier_name
+-   supply_type\
+    **PK:** (branch_id, supplier_name)
+
+------------------------------------------------------------------------
+
+## 🔗 Relationships
+
+-   Employee works in Branch\
+-   Branch managed by Employee\
+-   Employee supervises Employee\
+-   Client belongs to Branch\
+-   Employee ↔ Client (Many-to-Many)\
+-   Branch has Suppliers
+
+------------------------------------------------------------------------
+
+## ⚙️ Constraints
+
+-   PRIMARY KEY\
+-   FOREIGN KEY\
+-   ON DELETE SET NULL\
+-   ON DELETE CASCADE
+
+------------------------------------------------------------------------
+
+## 🚀 Step-by-Step Execution
+
+### Step 1: Install MySQL
+
+Install MySQL Server or use MySQL Workbench / XAMPP.
+
+### Step 2: Open SQL Tool
+
+Open MySQL Workbench or Command Line.
+
+### Step 3: Create Database
+
+``` sql
 CREATE DATABASE TechImpact;
 USE TechImpact;
 ```
 
-## 🗃️ Tables Created
-1. employee  
-2. branch  
-3. client  
-4. works_on  
-5. branch_supplier  
+### Step 4: Run SQL File
 
-## ⚙️ Steps Completed
-
-### Step 1: Database Creation
-- Created the `TechImpact` database.
-- Selected the database using `USE`.
-
-### Step 2: Table Creation
-- Created `employee` table with employee details.
-- Created `branch` table with manager details.
-- Created `client` table for customers.
-- Created `works_on` table for sales records.
-- Created `branch_supplier` table for supplier details.
-
-### Step 3: Constraints Applied
-- Primary Keys
-- Foreign Keys
-- `ON DELETE SET NULL`
-- `ON DELETE CASCADE`
-
-### Step 4: Inserted Sample Data
-- Added employees
-- Added branches
-- Added clients
-- Added suppliers
-- Added sales entries
-
-### Step 5: Updated Records
-- Updated employee branch IDs
-- Updated supervisor IDs
-- Updated client names
-
-### Step 6: Data Retrieval Queries
-Used:
-```sql
-SELECT * FROM table_name;
+``` sql
+SOURCE company_DB_sql_queries.sql;
 ```
 
-### Step 7: Sorting Queries
-```sql
-ORDER BY salary ASC;
-ORDER BY salary DESC;
-LIMIT 1;
+### Step 5: Verify Tables
+
+``` sql
+SHOW TABLES;
 ```
 
-### Step 8: Filtering Queries
-```sql
-WHERE sex='M';
-WHERE birth_day BETWEEN '1970-01-01' AND '1975-01-01';
-WHERE first_name IN ('Jim','Michael');
+### Step 6: Check Structure
+
+``` sql
+DESCRIBE employee;
+DESCRIBE branch;
 ```
 
-### Step 9: Aggregate Functions
-```sql
-COUNT()
-AVG()
-SUM()
-MAX()
-GROUP BY
-HAVING
+### Step 7: View Data
+
+``` sql
+SELECT * FROM employee;
+SELECT * FROM branch;
+SELECT * FROM client;
 ```
 
-### Step 10: Pattern Matching
-```sql
-LIKE 'LLC%'
-LIKE '_____10%'
+### Step 8: Test Join
+
+``` sql
+SELECT e.first_name, b.branch_name
+FROM employee e
+JOIN branch b ON e.branch_id = b.branch_id;
 ```
 
-### Step 11: UNION
-```sql
-SELECT first_name FROM employee
-UNION
-SELECT branch_name FROM branch;
-```
+### Step 9: Experiment
 
-### Step 12: JOINS
-- INNER JOIN
-- LEFT JOIN
-- RIGHT JOIN
+-   Insert new data\
+-   Update salaries\
+-   Delete records to test constraints
 
-### Step 13: Subquery
-```sql
-SELECT * FROM employee
-WHERE emp_id IN (
-  SELECT DISTINCT emp_id
-  FROM works_on
-  WHERE total_sales > 50000
-);
-```
+------------------------------------------------------------------------
 
-## 🎯 Learning Outcomes
-- Database design
-- Table relationships
-- SQL constraints
-- CRUD basics
-- Filtering & sorting
-- Joins
-- Aggregate functions
-- Subqueries
+## 📚 Use Cases
 
-## 🚀 How to Run
-1. Open MySQL Workbench  
-2. Paste the SQL file  
-3. Execute step by step  
-4. View outputs  
+-   SQL learning\
+-   DBMS practice\
+-   Mini project
 
-## 📌 Conclusion
-This project is useful for beginners to understand a real-world company database system using SQL.
+------------------------------------------------------------------------
+
+## 🛠️ Tech Used
+
+-   MySQL / SQL
+
+------------------------------------------------------------------------
+
+## ✨ Notes
+
+Good for understanding relational databases and real-world data
+modeling.
