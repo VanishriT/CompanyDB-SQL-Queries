@@ -1,159 +1,233 @@
-# 📊 Company Database Management System (TechImpact)
+# 📘 SQL Practice README – Company Database(By using MySQL Database)
 
-## 📌 Overview
+---
 
-This project contains SQL queries to design and manage a **Company
-Database System** called **TechImpact**.\
-It models employees, branches, clients, and suppliers with real-world
-relationships.
+## 🧭 Introduction
 
-------------------------------------------------------------------------
+This document captures the SQL queries executed on a sample company database named `tech`, along with a clear step-by-step flow of what was done. It serves as both a learning reference and a revision guide.
 
-## 🏗️ Database Structure
+The database includes:
 
-### 1. Employee
+* `employee`
+* `branch`
+* `client`
+* `branch_supplier`
+* `works_on`
 
--   emp_id (PK)
--   first_name
--   last_name
--   birth_day
--   sex
--   salary
--   super_id (FK → employee.emp_id)
--   branch_id (FK → branch.branch_id)
+---
 
-### 2. Branch
+## 🪜 Step-by-Step Process
 
--   branch_id (PK)
--   branch_name
--   mgr_id (FK → employee.emp_id)
--   mgr_start_date
+### ✅ Step 1: Select the Database
 
-### 3. Client
+Started by selecting the database to work on.
 
--   client_id (PK)
--   client_name
--   branch_id (FK → branch.branch_id)
-
-### 4. Works_With
-
--   emp_id (FK)
--   client_id (FK)
--   total_sales\
-    **PK:** (emp_id, client_id)
-
-### 5. Branch_Supplier
-
--   branch_id (FK)
--   supplier_name
--   supply_type\
-    **PK:** (branch_id, supplier_name)
-
-------------------------------------------------------------------------
-
-## 🔗 Relationships
-
--   Employee works in Branch\
--   Branch managed by Employee\
--   Employee supervises Employee\
--   Client belongs to Branch\
--   Employee ↔ Client (Many-to-Many)\
--   Branch has Suppliers
-
-------------------------------------------------------------------------
-
-## ⚙️ Constraints
-
--   PRIMARY KEY\
--   FOREIGN KEY\
--   ON DELETE SET NULL\
--   ON DELETE CASCADE
-
-------------------------------------------------------------------------
-
-## 🚀 Step-by-Step Execution
-
-### Step 1: Install MySQL
-
-Install MySQL Server or use MySQL Workbench / XAMPP.
-
-### Step 2: Open SQL Tool
-
-Open MySQL Workbench or Command Line.
-
-### Step 3: Create Database
-
-``` sql
-CREATE DATABASE TechImpact;
-USE TechImpact;
+```sql
+USE tech;
 ```
 
-### Step 4: Run SQL File
+---
 
-``` sql
-SOURCE company_DB_sql_queries.sql;
+### ✅ Step 2: Perform Aggregation Queries
+
+Counted employees based on gender and applied grouping.
+
+```sql
+SELECT COUNT(sex) FROM employee GROUP BY sex;
+
+SELECT COUNT(sex), sex FROM employee GROUP BY sex;
+
+SELECT COUNT(emp_id) 
+FROM employee  
+WHERE sex IN ("M", "F");
 ```
 
-### Step 5: Verify Tables
+✔️ Learned:
 
-``` sql
-SHOW TABLES;
+* How to use `COUNT()`
+* How `GROUP BY` works
+* How to filter using `IN`
+
+---
+
+### ✅ Step 3: Apply Filtering with LIKE
+
+Tried filtering client names using pattern matching.
+
+```sql
+SELECT * FROM client WHERE client_name LIKE 'LLC';
 ```
 
-### Step 6: Check Structure
+✔️ Understood:
 
-``` sql
-DESCRIBE employee;
-DESCRIBE branch;
-```
+* `'LLC'` → exact match
+* `'%LLC'` → ends with LLC
+* `'LLC%'` → starts with LLC
+* `'%LLC%'` → contains LLC
 
-### Step 7: View Data
+---
 
-``` sql
-SELECT * FROM employee;
-SELECT * FROM branch;
+### ✅ Step 4: Retrieve All Data
+
+Fetched all records from the `client` table.
+
+```sql
 SELECT * FROM client;
 ```
 
-### Step 8: Test Join
+✔️ Learned basic data retrieval.
 
-``` sql
-SELECT e.first_name, b.branch_name
-FROM employee e
-JOIN branch b ON e.branch_id = b.branch_id;
+---
+
+### ✅ Step 5: Use UNION (Combine Results)
+
+Combined employee names and branch names into one result.
+
+```sql
+SELECT employee.first_name FROM employee
+UNION
+SELECT branch.branch_name FROM branch;
 ```
 
-### Step 9: Experiment
+✔️ Learned:
 
--   Insert new data\
--   Update salaries\
--   Delete records to test constraints
+* How `UNION` merges results
+* Removes duplicates automatically
 
-------------------------------------------------------------------------
+---
 
-### Company Database
+### ✅ Step 6: Explore Table Structure
 
-<img width="1275" height="1650" alt="company-database_page-0001" src="https://github.com/user-attachments/assets/e13efa74-3285-4a97-b85f-a970ac431ab1" />
+Checked table structures before applying joins.
 
+```sql
+DESC branch;
+SELECT * FROM employee;
+```
 
-------------------------------------------------------------------------
+✔️ Important before joins to understand columns.
 
+---
 
-## 📚 Use Cases
+### ✅ Step 7: Perform INNER JOINs
 
--   SQL learning\
--   DBMS practice\
--   Mini project
+Fetched common data across tables.
 
-------------------------------------------------------------------------
+```sql
+SELECT branch.branch_id, branch_name, first_name, salary 
+FROM employee 
+INNER JOIN branch 
+ON employee.emp_id = branch.mgr_id;
 
-## 🛠️ Tech Used
+SELECT client.client_name, branch.branch_name 
+FROM branch 
+INNER JOIN client 
+ON branch.branch_id = client.branch_id;
 
--   MySQL / SQL
+SELECT branch.branch_id, branch_supplier.supplier_name, branch.branch_name
+FROM branch 
+INNER JOIN branch_supplier 
+ON branch_supplier.branch_id = branch.branch_id;
+```
 
-------------------------------------------------------------------------
+✔️ Learned:
 
-## ✨ Notes
+* How to connect tables
+* How relationships work
 
-Good for understanding relational databases and real-world data
-modeling.
+---
+
+### ✅ Step 8: Perform LEFT JOIN
+
+Fetched all records from left table and matching from right.
+
+```sql
+SELECT branch.branch_name, branch_supplier.supplier_name 
+FROM branch_supplier 
+LEFT JOIN branch 
+ON branch_supplier.branch_id = branch.branch_id;
+```
+
+✔️ Learned:
+
+* Keeps all left table data
+
+---
+
+### ✅ Step 9: Perform RIGHT JOIN
+
+Fetched all records from right table and matching from left.
+
+```sql
+SELECT branch.branch_name, branch_supplier.supplier_name 
+FROM branch_supplier 
+RIGHT JOIN branch 
+ON branch_supplier.branch_id = branch.branch_id;
+```
+
+✔️ Learned:
+
+* Keeps all right table data
+
+---
+
+### ✅ Step 10: Use Nested Query (Subquery)
+
+Fetched employees who made sales greater than 50,000.
+
+```sql
+SELECT * 
+FROM employee 
+WHERE emp_id IN (
+    SELECT DISTINCT works_on.emp_id  
+    FROM works_on 
+    WHERE works_on.total_sales > 50000
+);
+```
+
+✔️ Learned:
+
+* How subqueries work inside `WHERE`
+* Use of `IN` with nested results
+
+---
+
+### ✅ Step 11: Identify and Fix Errors
+
+❌ Incorrect:
+
+```sql
+WHERE sex IN("M" "F");
+```
+
+✅ Correct:
+
+```sql
+WHERE sex IN ("M", "F");
+```
+
+✔️ Learned:
+
+* Proper syntax in `IN` condition
+
+---
+
+## 🧠 Key Concepts Covered
+
+* Aggregation (`COUNT`)
+* Grouping (`GROUP BY`)
+* Filtering (`WHERE`, `LIKE`, `IN`)
+* Combining results (`UNION`)
+* Joins (`INNER`, `LEFT`, `RIGHT`)
+* Nested queries (Subqueries)
+
+---
+
+## 🚀 Conclusion
+
+This exercise builds a strong foundation in SQL. The step-by-step approach shows how to:
+
+* Explore data
+* Combine tables
+* Filter results
+* Solve real-world query problems
